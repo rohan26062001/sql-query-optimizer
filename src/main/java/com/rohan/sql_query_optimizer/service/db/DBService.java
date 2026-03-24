@@ -16,4 +16,8 @@ public class DBService {
     public DatabaseConnectionResponse connect(DatabaseConnectionParams params) throws SQLException {
         return dbConnectionManager.connect(params);
     }
+
+    public String close() throws SQLException {
+        return dbConnectionManager.close();
+    }
 }

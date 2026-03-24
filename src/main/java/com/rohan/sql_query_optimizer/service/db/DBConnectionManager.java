@@ -13,7 +13,7 @@ import java.sql.SQLException;
 public class DBConnectionManager {
     private Connection connection;
 
-    public DatabaseConnectionResponse connect(DatabaseConnectionParams params) throws SQLException {
+    public synchronized DatabaseConnectionResponse connect(DatabaseConnectionParams params) throws SQLException {
         // Check if the connection is already closed
         if (this.connection != null && !this.connection.isClosed()) {
             this.connection.close();
@@ -28,5 +28,19 @@ public class DBConnectionManager {
         if (connection == null)
             throw new RuntimeException("No DB connection established");
         return connection;
+    }
+
+    public String close() throws SQLException {
+        String message = "Connection closure successful";
+        try {
+            if(connection != null) {
+                connection.close();
+                connection = null;
+            }
+        } catch (Exception e) {
+            message = e.getMessage();
+        } finally {
+            return message;
+        }
     }
 }
