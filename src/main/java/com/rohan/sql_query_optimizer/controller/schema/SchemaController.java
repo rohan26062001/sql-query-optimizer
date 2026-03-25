@@ -1,4 +1,4 @@
-package com.rohan.sql_query_optimizer.controller;
+package com.rohan.sql_query_optimizer.controller.schema;
 
 import com.rohan.sql_query_optimizer.service.schema.SchemaService;
 import org.springframework.ai.chat.client.ResponseEntity;

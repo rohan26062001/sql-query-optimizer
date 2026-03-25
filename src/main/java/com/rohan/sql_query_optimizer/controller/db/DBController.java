@@ -1,4 +1,4 @@
-package com.rohan.sql_query_optimizer.controller;
+package com.rohan.sql_query_optimizer.controller.db;
 
 import com.rohan.sql_query_optimizer.dto.db.DatabaseConnectionParams;
 import com.rohan.sql_query_optimizer.dto.db.DatabaseConnectionResponse;
