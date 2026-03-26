@@ -29,7 +29,11 @@ public class QueryGenAiService {
         this.chatClient = chatClientBuilder.build();
     }
 
-    public List<QueryOutput> generateQuery(List<InputQuery> userInput) throws SQLException {
+    public QueryOutput generateQuery(InputQuery userInput) throws SQLException {
+        return generateQueryOutputForSingleQuery(userInput);
+    }
+
+    public List<QueryOutput> generateQueries(List<InputQuery> userInput) throws SQLException {
         List<QueryOutput> queryOutput = new ArrayList<>();
         for(InputQuery inputQuery : userInput) {
             queryOutput.add(generateQueryOutputForSingleQuery(inputQuery));

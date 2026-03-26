@@ -17,7 +17,12 @@ public class QueryGenController {
     private QueryGenAiService queryGenAiService;
 
     @PostMapping("/generate-sql")
-    public List<QueryOutput> generateQuery(@RequestBody List<InputQuery> userInput) throws SQLException {
+    public QueryOutput generateQuery(@RequestBody InputQuery userInput) throws SQLException {
         return queryGenAiService.generateQuery(userInput);
+    }
+
+    @PostMapping("/generate-sqls")
+    public List<QueryOutput> generateQueries(@RequestBody List<InputQuery> userInput) throws SQLException {
+        return queryGenAiService.generateQueries(userInput);
     }
 }

@@ -26,6 +26,7 @@ CRITICAL:
 - Do NOT include markdown (no ```sql)
 - Do NOT include any extra text
 - Output should start directly with SELECT
+- Generate SQL Query in single line, don't use any '\n' characters in the generated query
 
 Convert this to SQL:
 {userQuery}
