@@ -1,6 +1,6 @@
-package com.rohan.sql_query_optimizer.controller.db;
+package com.rohan.sql_query_optimizer.controller;
 
-import com.rohan.sql_query_optimizer.dto.db.DatabaseConnectionParams;
+import com.rohan.sql_query_optimizer.dto.db.DatabaseConnectionRequest;
 import com.rohan.sql_query_optimizer.dto.db.DatabaseConnectionResponse;
 import com.rohan.sql_query_optimizer.enums.db.DBConnectionStatus;
 import com.rohan.sql_query_optimizer.service.db.DBService;
@@ -17,7 +17,7 @@ public class DBController {
     private DBService dbService;
 
     @PostMapping("/connect")
-    public ResponseEntity<DatabaseConnectionResponse, HttpStatus> connect(@RequestBody DatabaseConnectionParams params) {
+    public ResponseEntity<DatabaseConnectionResponse, HttpStatus> connect(@RequestBody DatabaseConnectionRequest params) {
         try {
             return new ResponseEntity<>(dbService.connect(params), HttpStatus.OK);
         } catch (Exception e) {

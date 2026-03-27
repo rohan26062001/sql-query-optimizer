@@ -1,6 +1,6 @@
 package com.rohan.sql_query_optimizer.service.db;
 
-import com.rohan.sql_query_optimizer.dto.db.DatabaseConnectionParams;
+import com.rohan.sql_query_optimizer.dto.db.DatabaseConnectionRequest;
 import com.rohan.sql_query_optimizer.dto.db.DatabaseConnectionResponse;
 import com.rohan.sql_query_optimizer.enums.db.DBConnectionStatus;
 import org.springframework.stereotype.Service;
@@ -13,7 +13,7 @@ import java.sql.SQLException;
 public class DBConnectionManager {
     private Connection connection;
 
-    public synchronized DatabaseConnectionResponse connect(DatabaseConnectionParams params) throws SQLException {
+    public synchronized DatabaseConnectionResponse connect(DatabaseConnectionRequest params) throws SQLException {
         // Check if the connection is already closed
         if (this.connection != null && !this.connection.isClosed()) {
             this.connection.close();

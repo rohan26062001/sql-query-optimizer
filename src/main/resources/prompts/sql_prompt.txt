@@ -26,11 +26,13 @@ Joins:
 - NEVER reuse alias names
 - Each table must have a UNIQUE alias
 - ALWAYS define aliases immediately after table name
+- Avoid unnecessary joins if data can be fetched from a single table
 
 Aggregation:
 - Use aggregation functions (SUM, AVG, COUNT) ONLY when required
 - If query implies "per student", "per subject", etc., use GROUP BY
 - When using GROUP BY, include all non-aggregated selected columns
+- If query contains "wise", "per", or "grouped by", use GROUP BY
 
 Filtering:
 - Use exact values from schema (case-sensitive)
@@ -43,8 +45,9 @@ Query Simplicity:
 - Prefer JOIN over subqueries
 - Avoid unnecessary subqueries
 - Keep query simple, readable, and efficient
+- Use DISTINCT when duplicate rows are possible
 
-Output Constraints (CRITICAL):
+Output Constraints (VERY CRITICAL):
 - Output MUST be ONLY the SQL query
 - DO NOT include explanations
 - DO NOT include markdown (no ```sql)
@@ -53,4 +56,7 @@ Output Constraints (CRITICAL):
 - Query MUST be in a single line (no newline characters)
 
 Convert this to SQL:
-{userQuery}
+{userMessage}
+
+Please consider additional inputs provided by the user:
+{additionalInputs}

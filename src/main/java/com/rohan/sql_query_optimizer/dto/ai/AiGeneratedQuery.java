@@ -1,4 +1,4 @@
-package com.rohan.sql_query_optimizer.dto.query;
+package com.rohan.sql_query_optimizer.dto.ai;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class InputQuery {
+public class AiGeneratedQuery {
     private String query;
 }

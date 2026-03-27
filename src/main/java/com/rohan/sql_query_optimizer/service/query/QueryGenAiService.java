@@ -1,7 +1,7 @@
 package com.rohan.sql_query_optimizer.service.query;
 
-import com.rohan.sql_query_optimizer.dto.query.InputQuery;
-import com.rohan.sql_query_optimizer.dto.query.QueryOutput;
+import com.rohan.sql_query_optimizer.dto.ai.AiGeneratedQuery;
+import com.rohan.sql_query_optimizer.dto.user.UserInput;
 import com.rohan.sql_query_optimizer.service.schema.SchemaService;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.prompt.Prompt;
@@ -29,27 +29,28 @@ public class QueryGenAiService {
         this.chatClient = chatClientBuilder.build();
     }
 
-    public QueryOutput generateQuery(InputQuery userInput) throws SQLException {
-        return generateQueryOutputForSingleQuery(userInput);
+    public AiGeneratedQuery generateQuery(UserInput userInput) throws SQLException {
+        return generateAiGeneratedQueryForSingleQuery(userInput);
     }
 
-    public List<QueryOutput> generateQueries(List<InputQuery> userInput) throws SQLException {
-        List<QueryOutput> queryOutput = new ArrayList<>();
-        for(InputQuery inputQuery : userInput) {
-            queryOutput.add(generateQueryOutputForSingleQuery(inputQuery));
+    public List<AiGeneratedQuery> generateQueries(List<UserInput> userInput) throws SQLException {
+        List<AiGeneratedQuery> AiGeneratedQuery = new ArrayList<>();
+        for(UserInput inputQuery : userInput) {
+            AiGeneratedQuery.add(generateAiGeneratedQueryForSingleQuery(inputQuery));
         }
-        return queryOutput;
+        return AiGeneratedQuery;
     }
 
-    private QueryOutput generateQueryOutputForSingleQuery(InputQuery inputQuery) throws SQLException {
+    private AiGeneratedQuery generateAiGeneratedQueryForSingleQuery(UserInput userInput) throws SQLException {
         Map<String, Object> promptReplacementMap = new HashMap<>();
         promptReplacementMap.put("schema", schemaService.getSchema());
-        promptReplacementMap.put("userQuery", inputQuery.getQuery());
+        promptReplacementMap.put("userMessage", userInput.getUserMessage());
+        promptReplacementMap.put("additionalInputs", userInput.getAdditionalInputs());
         String promtTemplateString = getPrompt();
 
         PromptTemplate promptTemplate = new PromptTemplate(promtTemplateString);
         Prompt prompt = promptTemplate.create(promptReplacementMap);
-        return new QueryOutput(inputQuery.getQuery(), chatClient.prompt(prompt).call().content());
+        return new AiGeneratedQuery(chatClient.prompt(prompt).call().content());
     }
 
     private String getPrompt() {

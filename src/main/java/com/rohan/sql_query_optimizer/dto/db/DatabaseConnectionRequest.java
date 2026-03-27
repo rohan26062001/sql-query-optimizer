@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class DatabaseConnectionParams {
+public class DatabaseConnectionRequest {
     private String host;
     private String port;
     private String database;
