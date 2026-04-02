@@ -1,5 +1,8 @@
 package com.rohan.sql_query_optimizer.service.calcite;
 
+import com.rohan.sql_query_optimizer.dto.ai.AiGeneratedQuery;
+import com.rohan.sql_query_optimizer.dto.calcite.OptimizedQuery;
+import lombok.CustomLog;
 import org.apache.calcite.adapter.jdbc.JdbcSchema;
 import org.apache.calcite.avatica.util.Casing;
 import org.apache.calcite.config.CalciteConnectionConfig;
@@ -19,6 +22,7 @@ import javax.sql.DataSource;
 /**
  * The type Dynamic schema validator.
  */
+@CustomLog
 public class DynamicSchemaValidator {
 
     private final FrameworkConfig config;
@@ -40,11 +44,7 @@ public class DynamicSchemaValidator {
 
         this.config = Frameworks.newConfigBuilder()
                 .defaultSchema(jdbcSchema)
-                .parserConfig(
-                        SqlParser.config()
-                                .withCaseSensitive(false)
-                                .withUnquotedCasing(Casing.TO_LOWER)
-                )
+                .parserConfig(SqlParser.config().withCaseSensitive(false).withUnquotedCasing(Casing.TO_LOWER))
                 .context(Contexts.of(calciteConfig))
                 .build();
     }
@@ -66,5 +66,20 @@ public class DynamicSchemaValidator {
         } catch (ValidationException e) {
             return String.format("SCHEMA_ERROR:=> Reason: %s", e.getMessage());
         }
+    }
+
+    /**
+     * Optimize optimized query.
+     *
+     * @param aiGeneratedQuery the ai generated query
+     * @return the optimized query
+     */
+    public OptimizedQuery optimize(AiGeneratedQuery aiGeneratedQuery) {
+        String sql = aiGeneratedQuery.getQuery();
+        sql = sql.trim().replaceAll(";$", "");
+
+        // Need to implement this
+
+        return new OptimizedQuery(sql);
     }
 }

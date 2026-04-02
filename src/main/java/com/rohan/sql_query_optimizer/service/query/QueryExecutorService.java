@@ -1,6 +1,6 @@
 package com.rohan.sql_query_optimizer.service.query;
 
-import com.rohan.sql_query_optimizer.dto.ai.AiGeneratedQuery;
+import com.rohan.sql_query_optimizer.dto.calcite.OptimizedQuery;
 import com.rohan.sql_query_optimizer.dto.user.UserOutput;
 import com.rohan.sql_query_optimizer.service.db.DBConnectionManager;
 import com.rohan.sql_query_optimizer.utils.ResultSetUtil;
@@ -24,13 +24,13 @@ public class QueryExecutorService {
     /**
      * Execute user output.
      *
-     * @param aiGeneratedQuery the ai generated query
+     * @param optimizedQuery the optimized query
      * @return the user output
      * @throws SQLException the sql exception
      */
-    public UserOutput execute(AiGeneratedQuery aiGeneratedQuery) throws SQLException {
+    public UserOutput execute(OptimizedQuery optimizedQuery) throws SQLException {
         try (Connection connection = dbConnectionManager.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(aiGeneratedQuery.getQuery());
+             PreparedStatement preparedStatement = connection.prepareStatement(optimizedQuery.getQuery());
              ResultSet resultSet = preparedStatement.executeQuery()) {
             ResultSetUtil.printResultSet(resultSet);
             return new UserOutput();

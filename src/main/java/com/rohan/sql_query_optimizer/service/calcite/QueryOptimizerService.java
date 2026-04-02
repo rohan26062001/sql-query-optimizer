@@ -1,0 +1,28 @@
+package com.rohan.sql_query_optimizer.service.calcite;
+
+import com.rohan.sql_query_optimizer.dto.ai.AiGeneratedQuery;
+import com.rohan.sql_query_optimizer.dto.calcite.OptimizedQuery;
+import com.rohan.sql_query_optimizer.service.db.DBConnectionManager;
+import lombok.CustomLog;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+/**
+ * The type Query optimizer service.
+ */
+@Service
+@CustomLog
+public class QueryOptimizerService {
+    @Autowired
+    private DBConnectionManager dbConnectionManager;
+
+    /**
+     * Optimize optimized query.
+     *
+     * @param query the query
+     * @return the optimized query
+     */
+    public OptimizedQuery optimize(AiGeneratedQuery query) {
+        return dbConnectionManager.getValidator().optimize(query);
+    }
+}
