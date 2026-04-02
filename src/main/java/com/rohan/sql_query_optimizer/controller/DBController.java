@@ -16,8 +16,17 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/db")
 public class DBController {
 
+    private final DBService dbService;
+
+    /**
+     * Instantiates a new Db controller.
+     *
+     * @param dbService the db service
+     */
     @Autowired
-    private DBService dbService;
+    public DBController(DBService dbService) {
+        this.dbService = dbService;
+    }
 
     /**
      * Connect response entity.

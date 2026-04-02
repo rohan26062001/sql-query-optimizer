@@ -20,20 +20,20 @@ import org.apache.calcite.tools.ValidationException;
 import javax.sql.DataSource;
 
 /**
- * The type Dynamic schema validator.
+ * The type Calcite planner.
  */
 @CustomLog
-public class DynamicSchemaValidator {
+public class CalcitePlanner {
 
     private final FrameworkConfig config;
 
     /**
-     * Instantiates a new Dynamic schema validator.
+     * Instantiates a new Calcite planner.
      *
      * @param dataSource the data source
      * @param dbSchema   the db schema
      */
-    public DynamicSchemaValidator(DataSource dataSource, String dbSchema) {
+    public CalcitePlanner(DataSource dataSource, String dbSchema) {
         SchemaPlus rootSchema = Frameworks.createRootSchema(true);
         SchemaPlus jdbcSchema = rootSchema.add(
                 "db",

@@ -3,14 +3,13 @@ package com.rohan.sql_query_optimizer.service.db;
 import com.rohan.sql_query_optimizer.dto.db.DatabaseConnectionRequest;
 import com.rohan.sql_query_optimizer.dto.db.DatabaseConnectionResponse;
 import com.rohan.sql_query_optimizer.enums.db.DBConnectionStatus;
-import com.rohan.sql_query_optimizer.service.calcite.DynamicSchemaValidator;
+import com.rohan.sql_query_optimizer.service.calcite.CalcitePlanner;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.stereotype.Service;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 
 /**
@@ -18,8 +17,9 @@ import java.sql.SQLException;
  */
 @Service
 public class DBConnectionManager {
+
     private DataSource dataSource;
-    private DynamicSchemaValidator validator;
+    private CalcitePlanner validator;
 
     /**
      * Connect database connection response.
@@ -45,7 +45,7 @@ public class DBConnectionManager {
 
         // ✅ create validator once after new connection, not on every request
         try (Connection conn = this.dataSource.getConnection()) {
-            this.validator = new DynamicSchemaValidator(this.dataSource, conn.getSchema());
+            this.validator = new CalcitePlanner(this.dataSource, conn.getSchema());
         }
 
         return new DatabaseConnectionResponse(DBConnectionStatus.SUCCESS, String.format("Connected to Database %s", url));
@@ -77,7 +77,7 @@ public class DBConnectionManager {
      *
      * @return the validator
      */
-    public DynamicSchemaValidator getValidator() {
+    public CalcitePlanner getValidator() {
         if (validator == null)
             throw new RuntimeException("No DB connection established");
         return validator;

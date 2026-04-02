@@ -18,8 +18,17 @@ import java.sql.SQLException;
 @Service
 public class QueryExecutorService {
 
+    private final DBConnectionManager dbConnectionManager;
+
+    /**
+     * Instantiates a new Query executor service.
+     *
+     * @param dbConnectionManager the db connection manager
+     */
     @Autowired
-    private DBConnectionManager dbConnectionManager;
+    public QueryExecutorService(DBConnectionManager dbConnectionManager) {
+        this.dbConnectionManager = dbConnectionManager;
+    }
 
     /**
      * Execute user output.

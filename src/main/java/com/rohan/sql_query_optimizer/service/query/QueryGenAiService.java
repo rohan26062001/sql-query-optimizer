@@ -6,6 +6,7 @@ import com.rohan.sql_query_optimizer.service.schema.SchemaService;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.chat.prompt.PromptTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -23,8 +24,8 @@ import java.util.stream.Collectors;
 @Service
 public class QueryGenAiService {
 
-    private SchemaService schemaService;
-    private ChatClient chatClient;
+    private final SchemaService schemaService;
+    private final ChatClient chatClient;
 
     /**
      * Instantiates a new Query gen ai service.
@@ -32,6 +33,7 @@ public class QueryGenAiService {
      * @param schemaService     the schema service
      * @param chatClientBuilder the chat client builder
      */
+    @Autowired
     public QueryGenAiService(SchemaService schemaService, ChatClient.Builder chatClientBuilder) {
         this.schemaService = schemaService;
         this.chatClient = chatClientBuilder.build();

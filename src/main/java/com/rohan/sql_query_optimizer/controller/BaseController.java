@@ -16,8 +16,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class BaseController {
 
+    private final BaseService baseService;
+
+    /**
+     * Instantiates a new Base controller.
+     *
+     * @param baseService the base service
+     */
     @Autowired
-    private BaseService baseService;
+    public BaseController(BaseService baseService) {
+        this.baseService = baseService;
+    }
 
     /**
      * Execute response entity.

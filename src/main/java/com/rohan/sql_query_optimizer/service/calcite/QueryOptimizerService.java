@@ -13,8 +13,18 @@ import org.springframework.stereotype.Service;
 @Service
 @CustomLog
 public class QueryOptimizerService {
+
+    private final DBConnectionManager dbConnectionManager;
+
+    /**
+     * Instantiates a new Query optimizer service.
+     *
+     * @param dbConnectionManager the db connection manager
+     */
     @Autowired
-    private DBConnectionManager dbConnectionManager;
+    public QueryOptimizerService(DBConnectionManager dbConnectionManager) {
+        this.dbConnectionManager = dbConnectionManager;
+    }
 
     /**
      * Optimize optimized query.

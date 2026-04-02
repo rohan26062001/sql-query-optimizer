@@ -13,8 +13,17 @@ import java.sql.SQLException;
 @Service
 public class DBService {
 
+    private final DBConnectionManager dbConnectionManager;
+
+    /**
+     * Instantiates a new Db service.
+     *
+     * @param dbConnectionManager the db connection manager
+     */
     @Autowired
-    private DBConnectionManager dbConnectionManager;
+    public DBService(DBConnectionManager dbConnectionManager) {
+        this.dbConnectionManager = dbConnectionManager;
+    }
 
     /**
      * Connect database connection response.
