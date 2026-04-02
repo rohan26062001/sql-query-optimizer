@@ -9,12 +9,11 @@ import org.springframework.ai.chat.prompt.PromptTemplate;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -30,35 +29,35 @@ public class QueryGenAiService {
     }
 
     public AiGeneratedQuery generateQuery(UserInput userInput) throws SQLException {
-        return generateAiGeneratedQueryForSingleQuery(userInput);
-    }
-
-    public List<AiGeneratedQuery> generateQueries(List<UserInput> userInput) throws SQLException {
-        List<AiGeneratedQuery> AiGeneratedQuery = new ArrayList<>();
-        for(UserInput inputQuery : userInput) {
-            AiGeneratedQuery.add(generateAiGeneratedQueryForSingleQuery(inputQuery));
-        }
-        return AiGeneratedQuery;
-    }
-
-    private AiGeneratedQuery generateAiGeneratedQueryForSingleQuery(UserInput userInput) throws SQLException {
         Map<String, Object> promptReplacementMap = new HashMap<>();
         promptReplacementMap.put("schema", schemaService.getSchema());
         promptReplacementMap.put("userMessage", userInput.getUserMessage());
         promptReplacementMap.put("additionalInputs", userInput.getAdditionalInputs());
-        String promtTemplateString = getPrompt();
+        String promtTemplateString = getPrompt("query_generation_prompt.txt");
 
         PromptTemplate promptTemplate = new PromptTemplate(promtTemplateString);
         Prompt prompt = promptTemplate.create(promptReplacementMap);
         return new AiGeneratedQuery(chatClient.prompt(prompt).call().content());
     }
 
-    private String getPrompt() {
-        try {
-            InputStream inputStream = getClass().getClassLoader().getResourceAsStream("prompts/sql_prompt.txt");
-            if (inputStream == null)
-                throw new RuntimeException("Prompt file not found");
+    public AiGeneratedQuery rectifyQuery(UserInput userInput, AiGeneratedQuery wrongQuery, String validationError) throws SQLException {
+        Map<String, Object> promptReplacementMap = new HashMap<>();
+        promptReplacementMap.put("schema", schemaService.getSchema());
+        promptReplacementMap.put("userMessage", userInput.getUserMessage());
+        promptReplacementMap.put("invalidQuery", wrongQuery.getQuery());
+        promptReplacementMap.put("validationError", validationError);
+        String promtTemplateString = getPrompt("query_rectifier_prompt.txt");
 
+        PromptTemplate promptTemplate = new PromptTemplate(promtTemplateString);
+        Prompt prompt = promptTemplate.create(promptReplacementMap);
+        return new AiGeneratedQuery(chatClient.prompt(prompt).call().content());
+    }
+
+    private String getPrompt(String promptFileName) {
+        try {
+            InputStream inputStream = getClass().getClassLoader().getResourceAsStream(String.format("prompts/%s", promptFileName));
+            if (inputStream == null)
+                throw new FileNotFoundException(String.format("Prompt file %s not found", promptFileName));
             return new BufferedReader(new InputStreamReader(inputStream)).lines().collect(Collectors.joining("\n"));
         } catch (Exception e) {
             throw new RuntimeException("Error loading prompt file", e);

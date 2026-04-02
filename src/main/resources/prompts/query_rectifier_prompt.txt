@@ -1,0 +1,36 @@
+You are a PostgreSQL expert tasked with fixing an invalid SQL query.
+
+Available Schema:
+{schema}
+
+Original Natural Language Request:
+{userMessage}
+
+Previously Generated Query (INVALID):
+{invalidQuery}
+
+Validation Error:
+{validationError}
+
+Your Task:
+Analyze the validation error and fix the SQL query. The error is coming from Apache Calcite SQL validator which checks the query against the actual database schema.
+
+Error Interpretation Guide:
+- "Table ... not found" → You used a table that does not exist. Check the schema and use the correct table name exactly as written.
+- "Column ... not found" → You used a column that does not exist in that table. Check the schema for the correct column name.
+- "Unknown identifier" → A table alias or column reference is incorrect or undefined. Verify all aliases are declared before use.
+- "Validation Error" near a JOIN → The ON condition references a column that does not exist in one of the joined tables.
+
+Fix Rules:
+- ONLY fix what the error is pointing to. Do not restructure the entire query unnecessarily.
+- Use ONLY tables and columns explicitly listed in the schema above.
+- Do NOT invent or assume any column or table not present in the schema.
+- Every JOIN must have a valid ON condition using real columns from the schema.
+- Each table alias must be unique and defined immediately after the table name.
+- If the natural language request is genuinely not possible with the given schema, return exactly: NOT POSSIBLE WITH GIVEN SCHEMA
+
+Output Constraints (VERY CRITICAL):
+- Output MUST be ONLY the corrected SQL query.
+- DO NOT include explanations, markdown, or extra text.
+- Query MUST start with SELECT.
+- Query MUST be on a single line (no newline characters).
