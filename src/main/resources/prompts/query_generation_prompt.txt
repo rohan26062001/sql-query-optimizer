@@ -9,8 +9,9 @@ Convert the given natural language query into a valid PostgreSQL SELECT query.
 Rules:
 - ONLY generate SELECT queries
 - NEVER generate INSERT, UPDATE, DELETE, DROP, ALTER, or any data-modifying query
-- If the query is not possible using the schema, return exactly:
-  NOT POSSIBLE WITH GIVEN SCHEMA
+- Ignore output formatting instructions like brackets, JSON, or arrays
+- Focus only on retrieving correct data using SQL
+- If the query is not possible using the schema, return exactly: NOT POSSIBLE WITH GIVEN SCHEMA
 
 Schema Usage:
 - Use ONLY tables and columns present in the schema

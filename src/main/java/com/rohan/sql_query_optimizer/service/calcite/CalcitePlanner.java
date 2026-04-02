@@ -71,11 +71,11 @@ public class CalcitePlanner {
     /**
      * Optimize optimized query.
      *
-     * @param aiGeneratedQuery the ai generated query
+     * @param validQuery the ai generated query
      * @return the optimized query
      */
-    public OptimizedQuery optimize(AiGeneratedQuery aiGeneratedQuery) {
-        String sql = aiGeneratedQuery.getQuery();
+    public OptimizedQuery optimize(AiGeneratedQuery validQuery) {
+        String sql = validQuery.getQuery();
         sql = sql.trim().replaceAll(";$", "");
 
         // Need to implement this
