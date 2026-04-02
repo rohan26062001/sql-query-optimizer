@@ -19,14 +19,11 @@ public class QueryExecutorService {
     private DBConnectionManager dbConnectionManager;
 
     public UserOutput execute(AiGeneratedQuery aiGeneratedQuery) throws SQLException {
-        Connection connection = dbConnectionManager.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement(aiGeneratedQuery.getQuery());
-
-        ResultSet resultSet = preparedStatement.executeQuery();
-
-        ResultSetUtil.printResultSet(resultSet);
-
-        preparedStatement.close();
-        return new UserOutput();
+        try (Connection connection = dbConnectionManager.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(aiGeneratedQuery.getQuery());
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+            ResultSetUtil.printResultSet(resultSet);
+            return new UserOutput();
+        }
     }
 }

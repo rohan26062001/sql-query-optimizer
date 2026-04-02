@@ -19,7 +19,7 @@ public class QueryValidatorService {
     }
 
     public AiGeneratedQuery validate(UserInput userInput, AiGeneratedQuery aiGeneratedQuery) throws SQLException {
-        DynamicSchemaValidator dynamicSchemaValidator = new DynamicSchemaValidator(dbConnectionManager.getDataSource(), "public");
+        DynamicSchemaValidator dynamicSchemaValidator = dbConnectionManager.getValidator();
         int attempts = 3;
         AiGeneratedQuery query = aiGeneratedQuery;
         while(attempts > 0) {

@@ -26,7 +26,6 @@ public class BaseService {
 
     public UserOutput execute(UserInput userInput) throws SQLException {
         AiGeneratedQuery aiGeneratedQuery = queryGenAiService.generateQuery(userInput);
-        System.out.println("First query: " + aiGeneratedQuery.getQuery());
         AiGeneratedQuery validatedQuery = queryValidatorService.validate(userInput, aiGeneratedQuery);
         return queryExecutorService.execute(validatedQuery);
     }
