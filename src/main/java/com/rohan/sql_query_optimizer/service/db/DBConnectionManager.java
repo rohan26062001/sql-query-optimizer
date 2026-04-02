@@ -14,31 +14,24 @@ import java.sql.SQLException;
 
 @Service
 public class DBConnectionManager {
-    private Connection connection;
     private DataSource dataSource;
 
     public synchronized DatabaseConnectionResponse connect(DatabaseConnectionRequest params) throws SQLException {
         // Check if the connection is already closed
-        if (this.connection != null && !this.connection.isClosed()) {
-            this.connection.close();
+        if (this.dataSource != null && dataSource instanceof HikariDataSource hds && !hds.isClosed()) {
+            hds.close();
         }
 
-        String url = String.format("jdbc:postgresql://%s:%s/%s", params.getHost(), params.getPort(), params.getDatabase());
-        this.connection = DriverManager.getConnection(url, params.getUsername(), params.getPassword());
-
         HikariConfig hikariConfig = new HikariConfig();
+
+        String url = String.format("jdbc:postgresql://%s:%s/%s", params.getHost(), params.getPort(), params.getDatabase());
         hikariConfig.setJdbcUrl(url);
         hikariConfig.setUsername(params.getUsername());
         hikariConfig.setPassword(params.getPassword());
+
         this.dataSource = new HikariDataSource(hikariConfig);
 
         return new DatabaseConnectionResponse(DBConnectionStatus.SUCCESS, String.format("Connected to Database %s", url));
-    }
-
-    public Connection getConnection() {
-        if (connection == null)
-            throw new RuntimeException("No DB connection established");
-        return connection;
     }
 
     public DataSource getDataSource() {
@@ -47,20 +40,20 @@ public class DBConnectionManager {
         return dataSource;
     }
 
+    public Connection getConnection() throws SQLException {
+        return getDataSource().getConnection();
+    }
 
-    public String close() throws SQLException {
-        String message = "Connection closure successful";
+
+    public synchronized String close() {
         try {
-            if(connection != null) {
-                connection.close();
-                connection = null;
-            }
-            if(dataSource != null)
+            if (dataSource instanceof HikariDataSource hds && !hds.isClosed()) {
+                hds.close();
                 dataSource = null;
+            }
+            return "Connection closure successful";
         } catch (Exception e) {
-            message = e.getMessage();
-        } finally {
-            return message;
+            return e.getMessage();
         }
     }
 }
