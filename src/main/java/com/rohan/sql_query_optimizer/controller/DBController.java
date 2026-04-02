@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * The type Db controller.
+ */
 @RestController
 @RequestMapping("/db")
 public class DBController {
@@ -16,6 +19,12 @@ public class DBController {
     @Autowired
     private DBService dbService;
 
+    /**
+     * Connect response entity.
+     *
+     * @param params the params
+     * @return the response entity
+     */
     @PostMapping("/connect")
     public ResponseEntity<DatabaseConnectionResponse, HttpStatus> connect(@RequestBody DatabaseConnectionRequest params) {
         try {
@@ -25,6 +34,11 @@ public class DBController {
         }
     }
 
+    /**
+     * Close response entity.
+     *
+     * @return the response entity
+     */
     @GetMapping("/close")
     public ResponseEntity<String, HttpStatus> close() {
         try {

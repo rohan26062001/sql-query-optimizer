@@ -11,6 +11,9 @@ import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 
+/**
+ * The type Base service.
+ */
 @Service
 @CustomLog
 public class BaseService {
@@ -18,6 +21,13 @@ public class BaseService {
     private QueryValidatorService queryValidatorService;
     private QueryExecutorService queryExecutorService;
 
+    /**
+     * Instantiates a new Base service.
+     *
+     * @param queryGenAiService     the query gen ai service
+     * @param queryValidatorService the query validator service
+     * @param queryExecutorService  the query executor service
+     */
     public BaseService(QueryGenAiService queryGenAiService,  QueryValidatorService queryValidatorService,
                        QueryExecutorService queryExecutorService) {
         this.queryGenAiService = queryGenAiService;
@@ -25,6 +35,13 @@ public class BaseService {
         this.queryExecutorService = queryExecutorService;
     }
 
+    /**
+     * Execute user output.
+     *
+     * @param userInput the user input
+     * @return the user output
+     * @throws SQLException the sql exception
+     */
     public UserOutput execute(UserInput userInput) throws SQLException {
         log.debug("User Input: {}", userInput);
         AiGeneratedQuery aiGeneratedQuery = queryGenAiService.generateQuery(userInput);

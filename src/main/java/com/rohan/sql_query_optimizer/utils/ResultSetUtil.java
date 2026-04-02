@@ -6,8 +6,17 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The type Result set util.
+ */
 public class ResultSetUtil {
 
+    /**
+     * Print result set.
+     *
+     * @param rs the rs
+     * @throws SQLException the sql exception
+     */
     public static void printResultSet(ResultSet rs) throws SQLException {
         ResultSetMetaData metaData = rs.getMetaData();
         int columnCount = metaData.getColumnCount();

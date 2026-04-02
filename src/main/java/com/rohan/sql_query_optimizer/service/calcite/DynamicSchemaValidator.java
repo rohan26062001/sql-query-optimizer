@@ -16,10 +16,19 @@ import org.apache.calcite.tools.ValidationException;
 
 import javax.sql.DataSource;
 
+/**
+ * The type Dynamic schema validator.
+ */
 public class DynamicSchemaValidator {
 
     private final FrameworkConfig config;
 
+    /**
+     * Instantiates a new Dynamic schema validator.
+     *
+     * @param dataSource the data source
+     * @param dbSchema   the db schema
+     */
     public DynamicSchemaValidator(DataSource dataSource, String dbSchema) {
         SchemaPlus rootSchema = Frameworks.createRootSchema(true);
         SchemaPlus jdbcSchema = rootSchema.add(
@@ -40,6 +49,12 @@ public class DynamicSchemaValidator {
                 .build();
     }
 
+    /**
+     * Validate string.
+     *
+     * @param sql the sql
+     * @return the string
+     */
     public String validate(String sql) {
         sql = sql.trim().replaceAll(";$", ""); // ✅ remove trailing semicolon
         try (Planner planner = Frameworks.getPlanner(config)) {

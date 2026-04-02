@@ -17,17 +17,33 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * The type Query gen ai service.
+ */
 @Service
 public class QueryGenAiService {
 
     private SchemaService schemaService;
     private ChatClient chatClient;
 
+    /**
+     * Instantiates a new Query gen ai service.
+     *
+     * @param schemaService     the schema service
+     * @param chatClientBuilder the chat client builder
+     */
     public QueryGenAiService(SchemaService schemaService, ChatClient.Builder chatClientBuilder) {
         this.schemaService = schemaService;
         this.chatClient = chatClientBuilder.build();
     }
 
+    /**
+     * Generate query ai generated query.
+     *
+     * @param userInput the user input
+     * @return the ai generated query
+     * @throws SQLException the sql exception
+     */
     public AiGeneratedQuery generateQuery(UserInput userInput) throws SQLException {
         Map<String, Object> promptReplacementMap = new HashMap<>();
         promptReplacementMap.put("schema", schemaService.getSchema());
@@ -40,6 +56,15 @@ public class QueryGenAiService {
         return new AiGeneratedQuery(chatClient.prompt(prompt).call().content());
     }
 
+    /**
+     * Rectify query ai generated query.
+     *
+     * @param userInput       the user input
+     * @param wrongQuery      the wrong query
+     * @param validationError the validation error
+     * @return the ai generated query
+     * @throws SQLException the sql exception
+     */
     public AiGeneratedQuery rectifyQuery(UserInput userInput, AiGeneratedQuery wrongQuery, String validationError) throws SQLException {
         Map<String, Object> promptReplacementMap = new HashMap<>();
         promptReplacementMap.put("schema", schemaService.getSchema());

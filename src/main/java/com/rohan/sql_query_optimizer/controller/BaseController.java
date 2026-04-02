@@ -10,12 +10,21 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * The type Base controller.
+ */
 @RestController
 public class BaseController {
 
     @Autowired
     private BaseService baseService;
 
+    /**
+     * Execute response entity.
+     *
+     * @param userInput the user input
+     * @return the response entity
+     */
     @PostMapping("/execute")
     public ResponseEntity<UserOutput, HttpStatus> execute(@RequestBody UserInput userInput) {
         try {

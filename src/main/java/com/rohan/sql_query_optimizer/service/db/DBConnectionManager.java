@@ -13,11 +13,21 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+/**
+ * The type Db connection manager.
+ */
 @Service
 public class DBConnectionManager {
     private DataSource dataSource;
     private DynamicSchemaValidator validator;
 
+    /**
+     * Connect database connection response.
+     *
+     * @param params the params
+     * @return the database connection response
+     * @throws SQLException the sql exception
+     */
     public synchronized DatabaseConnectionResponse connect(DatabaseConnectionRequest params) throws SQLException {
         // Check if the connection is already closed
         if (this.dataSource != null && dataSource instanceof HikariDataSource hds && !hds.isClosed()) {
@@ -41,16 +51,32 @@ public class DBConnectionManager {
         return new DatabaseConnectionResponse(DBConnectionStatus.SUCCESS, String.format("Connected to Database %s", url));
     }
 
+    /**
+     * Gets data source.
+     *
+     * @return the data source
+     */
     public DataSource getDataSource() {
         if (dataSource == null)
             throw new RuntimeException("No DataSource established");
         return dataSource;
     }
 
+    /**
+     * Gets connection.
+     *
+     * @return the connection
+     * @throws SQLException the sql exception
+     */
     public Connection getConnection() throws SQLException {
         return getDataSource().getConnection();
     }
 
+    /**
+     * Gets validator.
+     *
+     * @return the validator
+     */
     public DynamicSchemaValidator getValidator() {
         if (validator == null)
             throw new RuntimeException("No DB connection established");
@@ -58,6 +84,11 @@ public class DBConnectionManager {
     }
 
 
+    /**
+     * Close string.
+     *
+     * @return the string
+     */
     public synchronized String close() {
         try {
             if (dataSource instanceof HikariDataSource hds && !hds.isClosed()) {

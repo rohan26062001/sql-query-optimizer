@@ -10,15 +10,29 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
+/**
+ * The type Schema service.
+ */
 @Service
 public class SchemaService {
     private final DBConnectionManager dbConnectionManager;
 
+    /**
+     * Instantiates a new Schema service.
+     *
+     * @param dbConnectionManager the db connection manager
+     */
     @Autowired
     public SchemaService(DBConnectionManager dbConnectionManager) {
         this.dbConnectionManager = dbConnectionManager;
     }
 
+    /**
+     * Gets schema.
+     *
+     * @return the schema
+     * @throws SQLException the sql exception
+     */
     public String getSchema() throws SQLException {
         Map<String, List<String>> schemaMap = initSchemaMap();
         return stringifySchemaMap(schemaMap);
