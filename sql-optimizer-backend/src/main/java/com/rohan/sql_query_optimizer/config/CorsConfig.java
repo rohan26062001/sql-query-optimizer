@@ -1,4 +1,4 @@
-package com.rohan.sql_query_optimizer;
+package com.rohan.sql_query_optimizer.config;
 
 import org.jspecify.annotations.NonNull;
 import org.springframework.context.annotation.Bean;

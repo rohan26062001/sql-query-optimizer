@@ -1,6 +1,26 @@
 # 🧠 AI-Powered SQL Query Optimizer
 
-A Spring Boot application that converts **natural language** into validated, optimized PostgreSQL queries using **Ollama LLM**, **Apache Calcite**, and **VolcanoPlanner**.
+A full-stack application that converts **natural language** into validated, optimized PostgreSQL queries using **Ollama LLM**, **Apache Calcite**, **VolcanoPlanner**, and a **React UI**.
+
+---
+
+## 🎥 Demo
+
+> 📹 **Watch the full walkthrough:**
+
+[![Demo Video](demo/Landing_Page.png)](demo/video.mp4)
+
+> _Click the image above to watch the demo video, or open `demo/video.mp4` directly._
+
+---
+
+## 📸 Screenshots
+
+### Landing Page — Connect to Database
+![Landing Page](demo/Landing_Page.png)
+
+### Execute Page — Query Results
+![Execute Page](demo/Query_Page.png)
 
 ---
 
@@ -15,6 +35,32 @@ You type a question in plain English. The system:
 6. Optimizes the query using VolcanoPlanner (cost-based optimizer)
 7. Explains what was optimized and why
 8. Executes and returns the result as a formatted table
+
+---
+
+## 🖥️ UI Features
+
+The React frontend (built with Vite) provides:
+
+- **Landing page** — connect to any PostgreSQL database with host/port/credentials
+- **Execute page** — type natural language questions, see results instantly
+- **AI Generated Query** — the raw SQL the LLM produced
+- **Optimized Query** — the VolcanoPlanner rewritten version
+- **Cost breakdown** — original vs optimized rows/cpu/io side by side
+- **LLM Explanation** — plain English summary of what changed and why
+- **Result table** — formatted ASCII table rendered directly in the browser
+
+### Running the UI
+
+```bash
+cd sql-optimizer-ui
+npm install
+npm run dev
+```
+
+Open **http://localhost:5173** in your browser.
+
+> The UI communicates with the Spring Boot backend on port **8080**. Make sure the backend is running first.
 
 ---
 
@@ -213,46 +259,58 @@ Validated SQL
 ## 🗂️ Project Structure
 
 ```
-src/main/java/com/rohan/sql_query_optimizer/
+.
+├── sql-optimizer-backend/                  ← Spring Boot
+│   └── src/main/java/com/rohan/sql_query_optimizer/
+│       ├── controller/
+│       │   ├── BaseController.java         # POST /execute
+│       │   └── DBController.java           # POST /db/connect, GET /db/close
+│       │
+│       ├── service/
+│       │   ├── BaseService.java            # Orchestrates full pipeline
+│       │   ├── calcite/
+│       │   │   ├── CalcitePlanner.java     # Core: validate() + optimize()
+│       │   │   ├── QueryValidatorService.java
+│       │   │   └── QueryOptimizerService.java
+│       │   ├── db/
+│       │   │   ├── DBConnectionManager.java
+│       │   │   └── DBService.java
+│       │   ├── query/
+│       │   │   ├── QueryGenAiService.java
+│       │   │   └── QueryExecutorService.java
+│       │   └── schema/
+│       │       └── SchemaService.java
+│       │
+│       ├── dto/
+│       │   ├── ai/AiGeneratedQuery.java
+│       │   ├── calcite/OptimizedQuery.java
+│       │   ├── db/DatabaseConnectionRequest/Response.java
+│       │   └── user/UserInput/UserOutput.java
+│       │
+│       ├── utils/
+│       │   └── ResultSetUtil.java
+│       │
+│       └── resources/
+│           ├── prompts/
+│           │   ├── query_generation_prompt.txt
+│           │   ├── query_rectifier_prompt.txt
+│           │   └── query_difference_prompt.txt
+│           └── application.properties
 │
-├── controller/
-│   ├── BaseController.java          # POST /execute
-│   └── DBController.java            # POST /db/connect, GET /db/close
+├── sql-optimizer-ui/                       ← React + Vite
+│   ├── src/
+│   │   ├── App.jsx                         # Full UI — landing + execute pages
+│   │   ├── main.jsx
+│   │   └── index.css
+│   ├── index.html
+│   ├── vite.config.js
+│   └── package.json
 │
-├── service/
-│   ├── BaseService.java             # Orchestrates full pipeline
-│   │
-│   ├── calcite/
-│   │   ├── CalcitePlanner.java      # Core: validate() + optimize()
-│   │   ├── QueryValidatorService.java   # Retry loop (3 attempts)
-│   │   └── QueryOptimizerService.java  # Delegates to CalcitePlanner
-│   │
-│   ├── db/
-│   │   ├── DBConnectionManager.java # HikariCP pool + CalcitePlanner lifecycle
-│   │   └── DBService.java           # DB connect/close logic
-│   │
-│   ├── query/
-│   │   ├── QueryGenAiService.java   # LLM: generate, rectify, explain
-│   │   └── QueryExecutorService.java # Runs SQL, returns formatted result
-│   │
-│   └── schema/
-│       └── SchemaService.java       # Reads live schema from information_schema
-│
-├── dto/
-│   ├── ai/AiGeneratedQuery.java
-│   ├── calcite/OptimizedQuery.java  # Holds RelNodes + costs
-│   ├── db/DatabaseConnectionRequest/Response.java
-│   └── user/UserInput/UserOutput.java
-│
-├── utils/
-│   └── ResultSetUtil.java           # Formats ResultSet as ASCII table
-│
-└── resources/
-    ├── prompts/
-    │   ├── query_generation_prompt.txt
-    │   ├── query_rectifier_prompt.txt
-    │   └── query_difference_prompt.txt
-    └── application.properties
+└── assets/                                 ← Screenshots & demo video
+    ├── screenshot-landing.png              ← replace with your screenshot
+    ├── screenshot-execute.png             ← replace with your screenshot
+    ├── thumbnail.png                       ← replace with your video thumbnail
+    └── demo.mp4                            ← replace with your demo video
 ```
 
 ---
@@ -265,6 +323,7 @@ src/main/java/com/rohan/sql_query_optimizer/
 |---|---|
 | Java | 21+ |
 | Maven | 3.9+ |
+| Node.js | 18+ |
 | PostgreSQL | Any |
 | Ollama | Latest |
 
@@ -286,11 +345,22 @@ spring.ai.ollama.chat.options.top-p=0.9
 spring.ai.ollama.chat.options.num-predict=512
 ```
 
-### 3. Run the Application
+### 3. Run the Backend
 
 ```bash
+cd sql-optimizer-backend
 mvn spring-boot:run
 ```
+
+### 4. Run the Frontend
+
+```bash
+cd sql-optimizer-ui
+npm install
+npm run dev
+```
+
+Open **http://localhost:5173** in your browser.
 
 ---
 
@@ -346,7 +416,8 @@ GET /db/close
 
 | Layer | Technology |
 |---|---|
-| Framework | Spring Boot 4.x |
+| Backend Framework | Spring Boot 4.x |
+| Frontend | React 18 + Vite |
 | AI / LLM | Spring AI + Ollama (Llama3) |
 | SQL Validation | Apache Calcite 1.37.0 |
 | Query Optimization | Calcite VolcanoPlanner (cost-based) |
@@ -374,4 +445,4 @@ Raw connections go stale on network drops, timeouts, or server restarts. HikariC
 
 ## 👨‍💻 Author
 
-Built by **Rohan** — a hands-on deep-dive into LLM-powered query generation, Apache Calcite internals, and cost-based query optimization.
+Built by **Rohan** — a hands-on deep-dive into LLM-powered query generation, Apache Calcite internals, cost-based query optimization, and full-stack React development.
