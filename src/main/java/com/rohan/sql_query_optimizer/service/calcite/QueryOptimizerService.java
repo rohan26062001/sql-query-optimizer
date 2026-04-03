@@ -31,8 +31,9 @@ public class QueryOptimizerService {
      *
      * @param query the query
      * @return the optimized query
+     * @throws Exception the exception
      */
-    public OptimizedQuery optimize(AiGeneratedQuery query) {
+    public OptimizedQuery optimize(AiGeneratedQuery query) throws Exception {
         return dbConnectionManager.getValidator().optimize(query);
     }
 }

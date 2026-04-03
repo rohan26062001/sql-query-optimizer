@@ -45,16 +45,16 @@ public class BaseService {
      *
      * @param userInput the user input
      * @return the user output
-     * @throws SQLException the sql exception
+     * @throws Exception the exception
      */
-    public UserOutput execute(UserInput userInput) throws SQLException {
+    public UserOutput execute(UserInput userInput) throws Exception {
         log.debug("User Input: {}", userInput);
         AiGeneratedQuery aiGeneratedQuery = queryGenAiService.generateQuery(userInput);
         log.debug("Generated query: {}", aiGeneratedQuery.getQuery());
         AiGeneratedQuery validatedQuery = queryValidatorService.validate(userInput, aiGeneratedQuery);
         log.debug("Validated query: {}", validatedQuery.getQuery());
         OptimizedQuery optimizedQuery = queryOptimizerService.optimize(validatedQuery);
-        log.debug("Optimized query: {}", optimizedQuery.getQuery());
+        log.debug("Optimized query: {}", optimizedQuery.getOptimizedSqlQuery());
         return queryExecutorService.execute(optimizedQuery);
     }
 }
