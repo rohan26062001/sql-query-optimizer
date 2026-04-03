@@ -1,5 +1,8 @@
-target/
-.mvn/wrapper/maven-wrapper.jar
+### .env files
+.env
+
+sql-optimizer-backend/target
+sql-optimizer-backend/.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
 
@@ -18,5 +21,26 @@ target/
 *.iml
 *.ipr
 
-### .env files
-.env
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+sql-optimizer-ui/node_modules
+sql-optimizer-ui/dist
+sql-optimizer-ui/dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

@@ -1,0 +1,10 @@
+You are a PostgreSQL expert.
+
+Tell me what are the differences between
+User Query: {userQuery}
+Optimized Query (Using Calcite): {optimizedQuery}
+
+Rules:
+- Don't explain everything
+- Use 3-4 bullet points at max
+- Mention how Optimized Query will affect the performance (both in good and bad manner (if any))
