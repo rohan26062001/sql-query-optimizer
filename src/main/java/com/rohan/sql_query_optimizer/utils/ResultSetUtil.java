@@ -11,77 +11,73 @@ import java.util.List;
  */
 public class ResultSetUtil {
 
+    private ResultSetUtil() {
+        // Private Constructor
+    }
+
     /**
-     * Print result set.
+     * To user output string.
      *
      * @param rs the rs
+     * @return the string
      * @throws SQLException the sql exception
      */
-    public static void printResultSet(ResultSet rs) throws SQLException {
+    public static String  toUserOutput(ResultSet rs) throws SQLException {
         ResultSetMetaData metaData = rs.getMetaData();
         int columnCount = metaData.getColumnCount();
 
-        // Store column widths
         int[] columnWidths = new int[columnCount];
-
-        // Get column names and initialize widths
         String[] columnNames = new String[columnCount];
         for (int i = 1; i <= columnCount; i++) {
             columnNames[i - 1] = metaData.getColumnName(i);
             columnWidths[i - 1] = columnNames[i - 1].length();
         }
 
-        // Store all rows temporarily
         List<String[]> rows = new ArrayList<>();
-
         while (rs.next()) {
             String[] row = new String[columnCount];
             for (int i = 1; i <= columnCount; i++) {
                 Object value = rs.getObject(i);
                 row[i - 1] = (value == null) ? "NULL" : value.toString();
-
-                // Update max width
                 columnWidths[i - 1] = Math.max(columnWidths[i - 1], row[i - 1].length());
             }
             rows.add(row);
         }
 
-        // Print separator
-        printSeparator(columnWidths);
+        // ✅ Build into StringBuilder instead of printing
+        StringBuilder sb = new StringBuilder();
 
-        // Print header
-        System.out.print("| ");
+        appendSeparator(sb, columnWidths);
+
+        sb.append("| ");
         for (int i = 0; i < columnCount; i++) {
-            System.out.print(padRight(columnNames[i], columnWidths[i]) + " | ");
+            sb.append(padRight(columnNames[i], columnWidths[i])).append(" | ");
         }
-        System.out.println();
+        sb.append("\n");
 
-        // Print separator
-        printSeparator(columnWidths);
+        appendSeparator(sb, columnWidths);
 
-        // Print rows
         for (String[] row : rows) {
-            System.out.print("| ");
+            sb.append("| ");
             for (int i = 0; i < columnCount; i++) {
-                System.out.print(padRight(row[i], columnWidths[i]) + " | ");
+                sb.append(padRight(row[i], columnWidths[i])).append(" | ");
             }
-            System.out.println();
+            sb.append("\n");
         }
 
-        // Print final separator
-        printSeparator(columnWidths);
+        appendSeparator(sb, columnWidths);
+
+        return sb.toString();
     }
 
-    // Helper to print separator line
-    private static void printSeparator(int[] columnWidths) {
-        System.out.print("+");
+    private static void appendSeparator(StringBuilder sb, int[] columnWidths) {
+        sb.append("+");
         for (int width : columnWidths) {
-            System.out.print("-".repeat(width + 2) + "+");
+            sb.append("-".repeat(width + 2)).append("+");
         }
-        System.out.println();
+        sb.append("\n");
     }
 
-    // Helper to pad text
     private static String padRight(String text, int width) {
         return String.format("%-" + width + "s", text);
     }

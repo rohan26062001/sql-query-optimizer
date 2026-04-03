@@ -80,6 +80,17 @@ public class QueryGenAiService {
         return new AiGeneratedQuery(chatClient.prompt(prompt).call().content());
     }
 
+    public String tellDifference(String originalQuery, String optimizedSqlQuery) {
+        Map<String, Object> promptReplacementMap = new HashMap<>();
+        promptReplacementMap.put("userQuery", originalQuery);
+        promptReplacementMap.put("optimizedQuery", optimizedSqlQuery);
+        String promtTemplateString = getPrompt("query_difference_prompt.txt");
+
+        PromptTemplate promptTemplate = new PromptTemplate(promtTemplateString);
+        Prompt prompt = promptTemplate.create(promptReplacementMap);
+        return chatClient.prompt(prompt).call().content();
+    }
+
     private String getPrompt(String promptFileName) {
         try {
             InputStream inputStream = getClass().getClassLoader().getResourceAsStream(String.format("prompts/%s", promptFileName));

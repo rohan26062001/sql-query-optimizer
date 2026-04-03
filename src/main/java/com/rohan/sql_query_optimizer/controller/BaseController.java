@@ -39,7 +39,7 @@ public class BaseController {
         try {
             return new ResponseEntity<>(baseService.execute(userInput), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(new UserOutput(e.getMessage()), HttpStatus.NOT_ACCEPTABLE);
+            return new ResponseEntity<>(new UserOutput(), HttpStatus.NOT_ACCEPTABLE);
         }
     }
 }

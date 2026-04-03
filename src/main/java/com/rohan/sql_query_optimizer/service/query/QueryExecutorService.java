@@ -37,12 +37,11 @@ public class QueryExecutorService {
      * @return the user output
      * @throws SQLException the sql exception
      */
-    public UserOutput execute(OptimizedQuery optimizedQuery) throws SQLException {
+    public String execute(OptimizedQuery optimizedQuery) throws SQLException {
         try (Connection connection = dbConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(optimizedQuery.getOptimizedSqlQuery());
              ResultSet resultSet = preparedStatement.executeQuery()) {
-            ResultSetUtil.printResultSet(resultSet);
-            return new UserOutput();
+            return ResultSetUtil.toUserOutput(resultSet);
         }
     }
 }

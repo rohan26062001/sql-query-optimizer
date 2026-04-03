@@ -32,7 +32,7 @@ public class BaseService {
      * @param queryExecutorService  the query executor service
      * @param queryOptimizerService the query optimizer service
      */
-    public BaseService(QueryGenAiService queryGenAiService,  QueryValidatorService queryValidatorService,
+    public BaseService(QueryGenAiService queryGenAiService, QueryValidatorService queryValidatorService,
                        QueryExecutorService queryExecutorService, QueryOptimizerService queryOptimizerService) {
         this.queryGenAiService = queryGenAiService;
         this.queryValidatorService = queryValidatorService;
@@ -55,6 +55,10 @@ public class BaseService {
         log.debug("Validated query: {}", validatedQuery.getQuery());
         OptimizedQuery optimizedQuery = queryOptimizerService.optimize(validatedQuery);
         log.debug("Optimized query: {}", optimizedQuery.getOptimizedSqlQuery());
-        return queryExecutorService.execute(optimizedQuery);
+        String whatIsOptimized = queryGenAiService.tellDifference(validatedQuery.getQuery(), optimizedQuery.getOptimizedSqlQuery());
+        String result = queryExecutorService.execute(optimizedQuery);
+        return new UserOutput(userInput.getUserMessage(), validatedQuery.getQuery(), optimizedQuery.getOptimizedSqlQuery(),
+                              optimizedQuery.getOriginalCost(), optimizedQuery.getOptimizedCost(), optimizedQuery.getCostDiff(),
+                              whatIsOptimized, result);
     }
 }
